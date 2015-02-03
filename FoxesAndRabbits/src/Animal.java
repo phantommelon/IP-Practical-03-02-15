@@ -6,7 +6,7 @@ import java.util.List;
  * @author David J. Barnes and Michael Kolling
  * @version 2008.03.30
  */
-public abstract class Animal
+public abstract class Animal implements Actor
 {
     // Whether the animal is alive or not.
     private boolean alive;
@@ -90,5 +90,4 @@ public abstract class Animal
         location = newLocation;
         field.place(this, newLocation);
     }
-    
 }
