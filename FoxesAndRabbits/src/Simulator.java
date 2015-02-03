@@ -6,10 +6,10 @@ import java.awt.Color;
 
 /**
  * A simple predator-prey simulator, based on a rectangular field
- * containing rabbits and foxes.
+ * containing rabbits and foxes and wolves.
  * 
- * @author David J. Barnes and Michael Kolling
- * @version 2008.03.30
+ * @author David J. Barnes and Michael Kolling edited by Alistair Madden
+ * @version 2008.03.30, 2015.02.03
  */
 public class Simulator
 {
@@ -21,7 +21,10 @@ public class Simulator
     // The probability that a fox will be created in any given grid position.
     private static final double FOX_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;    
+    private static final double RABBIT_CREATION_PROBABILITY = 0.08;
+    // The probability that a wolf will be created in any given grid position.
+    private static final double WOLF_CREATION_PROBABILITY = 0.02;
+
 
     // List of animals in the field.
     private List<Animal> animals;
@@ -61,6 +64,7 @@ public class Simulator
         view = new SimulatorView(depth, width);
         view.setColor(Rabbit.class, Color.green);
         view.setColor(Fox.class, Color.red);
+        view.setColor(Wolf.class, Color.black);
         
         // Setup a valid starting point.
         reset();
@@ -144,6 +148,11 @@ public class Simulator
                     Location location = new Location(row, col);
                     Rabbit rabbit = new Rabbit(true, field, location);
                     animals.add(rabbit);
+                }
+                else if(rand.nextDouble() <= WOLF_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Wolf wolf = new Wolf(true, field, location);
+                    animals.add(wolf);
                 }
                 // else leave the location empty.
             }
