@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2015 Alistair Madden <phantommelon@gmail.com>.
  *
@@ -14,13 +15,43 @@
  * limitations under the License.
  */
 
+import java.util.List;
+import java.util.Random;
+
 /**
- * Write a description of class Hunter here.
+ * Describes a hunter that hunts all animals.
  * 
  * @author Alistair Madden <phantommelon@gmail.com> 
- * @version (a version number or a date)
+ * @version 1.0
  */
-
-public class Hunter {
-
+public class Hunter implements Actor {
+    
+    //Random number generator to determine when the Hunter becomes inactive.
+    private static final Random rand = Randomizer.getRandom();
+    
+    // Whether the hunter is alive or not.
+    private boolean alive;
+    
+    // The hunter's field.
+    private Field field;
+    
+    // The hunter's position in the field.
+    private Location location;
+    
+    /**
+     * Create a new Hunter at location in field.
+     * 
+     * @param field The field currently occupied.
+     * @param location The location within the field.
+     */
+    public Hunter(Field field, Location location) {
+        this.field = field;
+        this.location = location;
+    }
+    
+    @Override
+    public void act(List<Animal> newAnimal) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
 }
