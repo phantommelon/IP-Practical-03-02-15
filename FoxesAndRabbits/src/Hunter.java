@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -24,34 +25,78 @@ import java.util.Random;
  * @author Alistair Madden <phantommelon@gmail.com> 
  * @version 1.0
  */
-public class Hunter implements Actor {
-    
-    //Random number generator to determine when the Hunter becomes inactive.
+public class Hunter extends Actor {
+
+    // A shared random number generator to control activity.
     private static final Random rand = Randomizer.getRandom();
     
-    // Whether the hunter is alive or not.
-    private boolean alive;
+    private static final double activeProb = 0.99;
     
-    // The hunter's field.
-    private Field field;
-    
-    // The hunter's position in the field.
-    private Location location;
-    
-    /**
-     * Create a new Hunter at location in field.
-     * 
-     * @param field The field currently occupied.
-     * @param location The location within the field.
-     */
     public Hunter(Field field, Location location) {
-        this.field = field;
-        this.location = location;
+        super(field, location);
     }
-    
+
     @Override
-    public void act(List<Animal> newAnimal) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void act(List<Animal> newAnimals) {
+        if(isActive()) {
+            Location location = getLocation();
+            Location newLocation = findTarget(location);
+            if(newLocation == null) { 
+                // No target found - try to move to a free location.
+                newLocation = getField().freeAdjacentLocation(location);
+            }
+            // See if it was possible to move.
+            if(newLocation != null) {
+                setLocation(newLocation);
+            }
+        }
+        
     }
     
+    private boolean isActive() {
+        
+        if(rand.nextDouble() > activeProb) {
+            this.setDead();
+            return false;
+        }
+        
+        else {
+            return true;
+        }
+    }
+
+    private Location findTarget(Location location) {
+        Field field = getField();
+        List<Location> adjacent = field.adjacentLocations(getLocation());
+        Iterator<Location> it = adjacent.iterator();
+        while(it.hasNext()) {
+            Location where = it.next();
+            Object animal = field.getObjectAt(where);
+            if(animal instanceof Rabbit) {
+                Rabbit rabbit = (Rabbit) animal;
+                if(rabbit.isAlive()) { 
+                    rabbit.setDead();
+                    // Remove the dead rabbit from the field.
+                    return where;
+                }
+            }
+            if(animal instanceof Fox) {
+                Fox fox = (Fox) animal;
+                if(fox.isAlive()) { 
+                    fox.setDead();
+                    // Remove the dead fox from the field.
+                    return where;
+                }
+            }
+            if(animal instanceof Wolf) {
+                Wolf wolf = (Wolf) animal;
+                if(wolf.isAlive()) {
+                    wolf.setDead();
+                    //Remove the dead wolf from the field.
+                    return where;
+                }
+            }
+        }
+        return null;
+    }
 }

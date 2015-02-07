@@ -24,10 +24,12 @@ public class Simulator
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
     // The probability that a wolf will be created in any given grid position.
     private static final double WOLF_CREATION_PROBABILITY = 0.02;
+    // The probability that a hunter will be created in any given grid position.
+    private static final double HUNTER_CREATION_PROBABILITY = 0.01;
 
 
-    // List of animals in the field.
-    private List<Animal> animals;
+    // List of actors in the field.
+    private List<Actor> animals;
     // The current state of the field.
     private Field field;
     // The current step of the simulation.
@@ -57,7 +59,7 @@ public class Simulator
             width = DEFAULT_WIDTH;
         }
         
-        animals = new ArrayList<Animal>();
+        animals = new ArrayList<Actor>();
         field = new Field(depth, width);
 
         // Create a view of the state of each location in the field.
@@ -65,6 +67,7 @@ public class Simulator
         view.setColor(Rabbit.class, Color.green);
         view.setColor(Fox.class, Color.red);
         view.setColor(Wolf.class, Color.black);
+        view.setColor(Hunter.class, Color.yellow);
         
         // Setup a valid starting point.
         reset();
@@ -103,8 +106,8 @@ public class Simulator
         // Provide space for newborn animals.
         List<Animal> newAnimals = new ArrayList<Animal>();        
         // Let all rabbits act.
-        for(Iterator<Animal> it = animals.iterator(); it.hasNext(); ) {
-            Animal animal = it.next();
+        for(Iterator<Actor> it = animals.iterator(); it.hasNext(); ) {
+            Actor animal = it.next();
             animal.act(newAnimals);
             if(! animal.isAlive()) {
                 it.remove();
@@ -154,6 +157,11 @@ public class Simulator
                     Wolf wolf = new Wolf(true, field, location);
                     animals.add(wolf);
                 }
+                else if(rand.nextDouble() <= HUNTER_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Hunter hunter = new Hunter(field, location);
+                    animals.add(hunter);
+                }
                 // else leave the location empty.
             }
         }
@@ -161,8 +169,12 @@ public class Simulator
 }
 
 class SimulatorTest {
-    public static void main(String args[]) {
+    public static void main(String args[]) throws InterruptedException {
         Simulator simulator = new Simulator(100,100);
-        simulator.runLongSimulation();
+        Thread.sleep(2000);
+        for(int i = 0; i < 150; i++) {
+            simulator.simulate(5);
+            Thread.sleep(400);
+        }
     }
 }

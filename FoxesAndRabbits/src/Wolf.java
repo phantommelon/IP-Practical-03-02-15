@@ -153,7 +153,7 @@ public class Wolf extends Animal {
                 Fox fox = (Fox) animal;
                 if(fox.isAlive()) { 
                     fox.setDead();
-                    foodLevel = RABBIT_FOOD_VALUE;
+                    foodLevel = FOX_FOOD_VALUE;
                     // Remove the dead rabbit from the field.
                     return where;
                 }
